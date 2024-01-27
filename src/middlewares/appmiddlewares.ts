@@ -7,6 +7,8 @@ import ApplicationException from "../exceptions/application.exception";
 import NotFoundException from "../exceptions/notfound.exception";
 import UnAuthorizeException from "../exceptions/unauthorize.exception";
 
+const CSRF_URLS_IGNORE: string[] = [];
+
 class AppMiddleWare {
 	async bodyMiddlewareHandler(request: Request, response: Response, next: NextFunction) {
 		const allowMethods = ["PUT", "POST"];
@@ -24,9 +26,11 @@ class AppMiddleWare {
 		const cookies = request.headers.cookie ? request.headers.cookie.split(",").map((x) => {
 			return x.split("=")
 		}) : [];
+		const hasIgnoreUrl = request.headers.origin  ? !CSRF_URLS_IGNORE.includes(request.headers.origin) : CSRF_URLS_IGNORE.length > 0;
 		const hasCsrfToken = cookies.find((x) => x.includes("csrfToken"));
 		const isHasCookieValue = cookies?.length > 0 && hasCsrfToken ? cookies[0][1]?.length > 0 : false; // should compare between csrf from client header and cookie.
-		if (allowCsrfMethods.includes(request.method)) {
+		if (allowCsrfMethods.includes(request.method) && !hasIgnoreUrl) {
+			console.log(isHasCookieValue);
 			if (!isHasCookieValue) {
 				return new UnAuthorizeException(response, "Method not allow.").handler()
 			} else {

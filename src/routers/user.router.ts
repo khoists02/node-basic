@@ -14,10 +14,10 @@ class UserRouter {
 
 	initUserRouter() {
 		this.userRouter.get(this.path, AppMiddleWare.authenticationMiddleware, UserController.get );
-		this.userRouter.post(this.path, AppMiddleWare.bodyMiddlewareHandler, UserController.post );
-		this.userRouter.get(this.pathDetails,UserController.getDetails );
-		this.userRouter.put(this.pathDetails, AppMiddleWare.bodyMiddlewareHandler, UserController.put );
-		this.userRouter.delete(this.pathDetails, UserController.delete );
+		this.userRouter.post(this.path, AppMiddleWare.authenticationMiddleware, AppMiddleWare.bodyMiddlewareHandler, UserController.post );
+		this.userRouter.get(this.pathDetails, AppMiddleWare.authenticationMiddleware, UserController.getDetails );
+		this.userRouter.put(this.pathDetails, AppMiddleWare.authenticationMiddleware, AppMiddleWare.bodyMiddlewareHandler, UserController.put );
+		this.userRouter.delete(this.pathDetails, AppMiddleWare.authenticationMiddleware, UserController.delete );
 		return this.userRouter;
 	}
 }

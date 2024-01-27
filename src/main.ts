@@ -4,6 +4,7 @@ import appCors from "cors";
 import DBConnect from "./database/Connection";
 import AppRouter from "./routers/app.router";
 import bodyParser from "body-parser";
+import * as Environment from "dotenv";
 
 class Main {
 	private app: Express;
@@ -23,10 +24,10 @@ class Main {
 	}
 }
 
+Environment.configDotenv({ path: "../.env" });
 const mainThread = new Main();
 
 DBConnect.connect().then(async () => {
-	console.log("Connecting Success");
 	await DBConnect.initTable();
 	mainThread.listen();
 }).catch((err) => {

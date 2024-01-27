@@ -20,10 +20,12 @@ class AppMiddleWare {
 
 	async csrfMiddleware(request: Request, response: Response, next: NextFunction) {
 		const allowCsrfMethods = ["POST", "PUT"];
+		console.log("CSRF HIT....");
 		const cookies = request.headers.cookie ? request.headers.cookie.split(",").map((x) => {
 			return x.split("=")
 		}) : [];
-		const isHasCookieValue = cookies?.length > 0 ? cookies[0][1]?.length > 0 : false; // should compare between csrf from client header and cookie.
+		const hasCsrfToken = cookies.find((x) => x.includes("csrfToken"));
+		const isHasCookieValue = cookies?.length > 0 && hasCsrfToken ? cookies[0][1]?.length > 0 : false; // should compare between csrf from client header and cookie.
 		if (allowCsrfMethods.includes(request.method)) {
 			if (!isHasCookieValue) {
 				return new UnAuthorizeException(response, "Method not allow.").handler()
@@ -58,7 +60,7 @@ class AppMiddleWare {
 				if (!tokenCookie) return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
 				const tokenValue  = tokenCookie.split("=")[1];
 				if (!tokenValue ) return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
-				const decode = await jwt.verify(tokenValue.trim(), "APP_ACCESS");
+				const decode = await jwt.verify(tokenValue.trim(), process.env.JWT_KEY_ACCESS || "");
 				if (!decode) return new UnAuthenticateException(response, undefined, undefined, 1004).handler();
 				const currentDate = new Date();
 				const timeToSeconds = Math.round(currentDate.getTime() / 1000);

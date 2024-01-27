@@ -15,8 +15,8 @@ class AppRouter {
 
 	initRoutes() {
 		this.appRouter.post(this.pathPrefix + CsrfController.path, CsrfController.post); // don't allow csrf
-		this.appRouter.post(this.pathPrefix + AuthController.path + "/login", AppMiddleWare.bodyMiddlewareHandler, AuthController.post); // don't allow csrf 
-		this.appRouter.post(this.pathPrefix + AuthController.path + "/logout", AppMiddleWare.authenticationMiddleware, AuthController.logout); // don't allow csrf for auth methods
+		this.appRouter.post(this.pathPrefix + AuthController.path + "/login", AppMiddleWare.csrfMiddleware, AppMiddleWare.bodyMiddlewareHandler, AuthController.post); // don't allow csrf 
+		this.appRouter.post(this.pathPrefix + AuthController.path + "/logout", AppMiddleWare.csrfMiddleware, AppMiddleWare.authenticationMiddleware, AuthController.logout); // don't allow csrf for auth methods
 		this.appRouter.use(this.pathPrefix, AppMiddleware.csrfMiddleware, UserRouter.initUserRouter() );
 		return this.appRouter;
 	}

@@ -9,6 +9,7 @@ class Users {
 	private entity: Model<Users> | undefined;
 	public username!: string;
 	public password!: string;
+	public email!: string;
 	public save!: Function;
 	public delete!: Function;
 
@@ -20,9 +21,11 @@ class Users {
 					return uuid.v4();
 				} 
 			},
+			email: {
+				type: String,
+			},
 			username: String,
 			password: String,
-			birthday: String,
 			createdAt: {
 				type: Date,
 				default: Date.now,
@@ -31,7 +34,7 @@ class Users {
 	}
 
 	findAll() {
-		return this.entity?.find();
+		return this.entity?.find().skip(0).limit(10);
 	}
 
 	findOne(id: string) {
@@ -43,11 +46,15 @@ class Users {
 	}
 
 	createOne(username: string, pass: string) {
-		console.log({ pass })
 		this.entity?.create({
 			username: username,
 			password: pass,
 		})
+	}
+
+	/** Test Model Create !!! */
+	createNewEmail(model: Users) {
+		this.entity?.create(model);
 	}
 
 	async updateOne(id: string, username: string) {

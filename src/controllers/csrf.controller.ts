@@ -9,7 +9,7 @@ class CsrfController {
 
 	async post(request: Request, response: Response) {
 		const cookieCsrf = await createCsrfToken();
-		response.cookie("csrfToken",cookieCsrf, { maxAge: 900000, httpOnly: true });
+		response.cookie("csrfToken", cookieCsrf, { maxAge: 900000, httpOnly: true });
 		return response.status(201).json({ csrfToken: cookieCsrf });
 	}
 }

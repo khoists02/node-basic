@@ -26,8 +26,8 @@ class AuthController {
 			// @ts-ignore
 			const isMatchPassword = await comparePassword(password, user.password);
 			if (!isMatchPassword) return response.status(401).json({ message: "Password invalid." });
-			const token = jwt.sign({user}, "APP_ACCESS", { expiresIn: "1d" } );
-			const tokenRefresh = jwt.sign({user}, "APP_REFRESH", { expiresIn: "12h" } );
+			const token = jwt.sign({user}, process.env.JWT_KEY_ACCESS || "", { expiresIn: "1d" } );
+			const tokenRefresh = jwt.sign({user}, process.env.JWT_KEY_REFRESH || "", { expiresIn: "12h" } );
 			response.cookie("localhost.token", token , { maxAge: 900000, httpOnly: true });
 			response.cookie("localhost.refresh", tokenRefresh , { maxAge: 900000, httpOnly: true })
 			return response.status(201).json({ username });

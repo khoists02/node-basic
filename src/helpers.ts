@@ -2,7 +2,7 @@
 export const createCsrfToken = (): Promise<string> => {
 	return new Promise((rs, _rj) => {
 		setTimeout(() => {
-			rs(random(30))
+			rs(random(40))
 		}, 1);
 	})
 }

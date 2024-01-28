@@ -29,7 +29,9 @@ class AuthController {
 			const token = jwt.sign({user}, process.env.JWT_KEY_ACCESS || "", { expiresIn: "1d" } );
 			const tokenRefresh = jwt.sign({user}, process.env.JWT_KEY_REFRESH || "", { expiresIn: "12h" } );
 			response.cookie("localhost.token", token , { maxAge: 900000, httpOnly: true });
-			response.cookie("localhost.refresh", tokenRefresh , { maxAge: 900000, httpOnly: true })
+			response.cookie("localhost.refresh", tokenRefresh , { maxAge: 900000, httpOnly: true });
+			response.setHeader("userId", user["_id"]);
+			await UserService.updateActivity(user["_id"] as string, false);
 			return response.status(201).json({ username });
 		} catch (error) {
 			// @ts-ignore
@@ -39,7 +41,9 @@ class AuthController {
 
 	async logout(request: Request, response: Response) {
 		response.cookie("localhost.token", "" , { maxAge: -1, httpOnly: true });
-		response.cookie("localhost.refresh", "" , { maxAge: -1, httpOnly: true })
+		response.cookie("localhost.refresh", "" , { maxAge: -1, httpOnly: true });
+		if (request.headers["userid"])
+			await UserService.updateActivity(request.headers["userid"] as string, true);
 		return response.status(201).json({ "message": "Logout" });
 	}
 

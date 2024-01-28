@@ -25,7 +25,11 @@ class UsersService {
 
 	async findOneByUsername(username: string) {
 		return Users.findOneByUsername(username);
-	} 
+	}
+
+	async updateActivity(id: string, isActive: boolean) {
+		return Users.updateActivity(id, isActive);
+	}
 }
 
 export default new UsersService();

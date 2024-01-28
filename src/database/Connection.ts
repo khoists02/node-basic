@@ -1,5 +1,8 @@
 import mongoose, { ConnectOptions } from "mongoose";
 import Users from "../entities/users";
+import Messages from "../entities/messages";
+import Conversation from "../entities/conversation";
+import ConversationUsers from "../entities/conversation_user";
 
 class Connection {
 	private connectionUrl: string;
@@ -20,6 +23,9 @@ class Connection {
 
 	async initTable() {
 		await Users.initModel();
+		await Messages.initModel();
+		await Conversation.initModel();
+		await ConversationUsers.initModel();
 	}
 }
 

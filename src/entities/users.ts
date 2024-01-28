@@ -10,6 +10,8 @@ class Users {
 	public username!: string;
 	public password!: string;
 	public email!: string;
+	public lastActivity!: Date;
+	public createdAt!: Date;
 	public save!: Function;
 	public delete!: Function;
 
@@ -30,6 +32,10 @@ class Users {
 				type: Date,
 				default: Date.now,
 			},
+			lastActivity: {
+				type: Date,
+				default: Date.now,
+			}
 		})
 	}
 
@@ -70,8 +76,16 @@ class Users {
 	}
 
 	async initModel() {
-		this._logger.log("init users model");
+		this._logger.log("Init Users model");
 		this.entity = model<Users>("User", this.schema);
+	}
+
+	async updateActivity(id: string, isActive: boolean) {
+		const data: Users | null | undefined = await this.entity?.findById(id);
+		if (data) {
+			data.lastActivity = isActive ? new Date() : null;
+			data.save();
+		}
 	}
 }
 

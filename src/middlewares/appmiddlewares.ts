@@ -61,17 +61,20 @@ class AppMiddleWare {
 		if (cookies && cookies?.length > 0) {
 			try {
 				const tokenCookie = cookies.find((x) => x.includes("localhost.token"));
-				if (!tokenCookie) return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
-				const tokenValue  = tokenCookie.split("=")[1];
-				if (!tokenValue ) return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
+				if (!tokenCookie)
+					return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
+				const tokenValue = tokenCookie.split("=")[1];
+				if (!tokenValue )
+					return new UnAuthenticateException(response, undefined, undefined, 1005).handler();
 				const decode = await jwt.verify(tokenValue.trim(), process.env.JWT_KEY_ACCESS || "");
-				if (!decode) return new UnAuthenticateException(response, undefined, undefined, 1004).handler();
+				if (!decode)
+					return new UnAuthenticateException(response, undefined, undefined, 1004).handler();
 				const currentDate = new Date();
 				const timeToSeconds = Math.round(currentDate.getTime() / 1000);
 				// @ts-ignore
-				if (timeToSeconds > decode["exp"]) {
+				if (timeToSeconds > decode["exp"])
 					return new UnAuthenticateException(response, "Token is expired.", undefined, 1007).handler();
-				}
+				
 				return next();
 			} catch (error) {
 				// @ts-ignore

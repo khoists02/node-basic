@@ -70,7 +70,7 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
-    "migrate-mongo": "^11.0.0",
+    "migrate-mongo": "^12.1.2",
     "mongo-migrate-ts": "^1.4.0",
     "mongoose": "^8.1.1",
     "node-uuid": "^1.4.8",
